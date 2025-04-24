@@ -15,4 +15,31 @@ class InputView {
             throw IllegalArgumentException("[ERROR] Invalid input. Please enter a valid number.")
         }
     }
+
+    fun readWinningNumbers(): List<Int> {
+        println("\nPlease enter last week's winning numbers.")
+        val input = Console.readLine()
+        try {
+            val numbers = input.split(",").map { it.trim().toInt() }
+            require(numbers.size == 6) { "[ERROR] You must enter exactly 6 winning numbers." }
+            require(numbers.all { it in 1..45 }) { "[ERROR] Lotto numbers must be between 1 and 45." }
+            require(numbers.distinct().size == 6) { "[ERROR] Winning numbers must be unique." }
+            return numbers
+        } catch (e: NumberFormatException) {
+            throw IllegalArgumentException("[ERROR] Invalid input. Please enter 6 winning numbers separated by commas.")
+        }
+    }
+
+    fun readBonusNumber(winningNumbers: List<Int>): Int {
+        println("\nPlease enter the bonus number.")
+        val input = Console.readLine()
+        try {
+            val bonusNumber = input.toInt()
+            require(bonusNumber in 1..45) { "[ERROR] Bonus number must be between 1 and 45." }
+            require(bonusNumber !in winningNumbers) { "[ERROR] Bonus number must not be in winning numbers." }
+            return bonusNumber
+        } catch (e: NumberFormatException) {
+            throw IllegalArgumentException("[ERROR] Invalid input. Please enter a valid number.")
+        }
+    }
 }
