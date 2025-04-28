@@ -29,7 +29,7 @@ class OutputView {
         }
 
         val totalPrize = results.entries.sumOf { it.key.prize * it.value }
-        val returnRate = totalPrize.toDouble() / totalCost * 100
+        val returnRate = if (totalCost == 0) 0.0 else totalPrize.toDouble() / totalCost * 100
         val formattedReturnRate = String.format("%.1f", returnRate).replace(",", ".") // Asegura punto decimal
         println("Total return rate is $formattedReturnRate%.")
     }
