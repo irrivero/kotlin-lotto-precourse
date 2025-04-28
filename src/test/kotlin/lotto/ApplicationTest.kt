@@ -49,6 +49,96 @@ class ApplicationTest : NsTest() {
         }
     }
 
+    @Test
+    fun `should throw exception when purchase amount is not divisible by 1000`() {
+        assertSimpleTest {
+            runException("1500")
+            assertThat(output()).contains("[ERROR]", "divisible by 1,000")
+        }
+    }
+
+    @Test
+    fun `should throw exception when purchase amount is negative`() {
+        assertSimpleTest {
+            runException("-1000")
+            assertThat(output()).contains("[ERROR]", "must be non-negative")
+        }
+    }
+
+    @Test
+    fun `should throw exception when winning numbers are invalid`() {
+        assertSimpleTest {
+            runException("1000" , "1,2,3,4,5")
+            assertThat(output()).contains("[ERROR]", "exactly 6 winning numbers")
+        }
+    }
+
+    @Test
+    fun `should throw exception when winning numbers contain duplicates`() {
+        assertSimpleTest {
+            runException("1000" , "1,2,3,4,5,5")
+            assertThat(output()).contains("[ERROR]", "must be unique")
+        }
+    }
+
+    @Test
+    fun `should throw exception when winning numbers are out of range`() {
+        assertSimpleTest {
+            runException("1000" , "1,2,3,4,5,46")
+            assertThat(output()).contains("[ERROR]", "must be between 1 and 45")
+        }
+    }
+
+    @Test
+    fun `should throw exception when bonus number is in winning numbers`() {
+        assertSimpleTest {
+            runException("1000", "1,2,3,4,5,6" , "3")
+            assertThat(output()).contains("[ERROR]", "must not be in winning numbers")
+        }
+    }
+
+    @Test
+    fun `should throw exception when bonus number is out of range`() {
+        assertSimpleTest {
+            runException("1000", "1,2,3,4,5,6" , "46")
+            assertThat(output()).contains("[ERROR]", "must be between 1 and 45")
+        }
+    }
+
+    @Test
+    fun `should correctly handle multiple tickets with various matches`() {
+        assertRandomUniqueNumbersInRangeTest(
+            {
+                run("5000", "1,2,3,4,5,6", "7")
+                assertThat(output()).contains(
+                    "You have purchased 5 tickets.",
+                    "Total return rate is"
+                )
+            },
+            // First ticket: 3 matches (5th rank)
+            listOf(1, 2, 3, 10, 20, 30),
+            // Second ticket: 4 matches (4th rank)
+            listOf(1, 2, 3, 4, 20, 30),
+            // Third ticket: 5 matches (3rd rank)
+            listOf(1, 2, 3, 4, 5, 30),
+            // Fourth ticket: 5 matches + bonus (2nd rank)
+            listOf(1, 2, 3, 4, 5, 7),
+            // Fifth ticket: 6 matches (1st rank)
+            listOf(1, 2, 3, 4, 5, 6)
+        )
+    }
+
+    @Test
+    fun `should handle case with zero tickets`() {
+        assertSimpleTest {
+            runException("0", "1,2,3,4,5,6", "7")
+            assertThat(output()).contains(
+                "You have purchased 0 tickets.",
+                "Total return rate is 0.0%."
+            )
+        }
+    }
+
     override fun runMain() {
         main()
     }
