@@ -11,26 +11,52 @@ fun main() {
     val outputView = OutputView()
     val lottoGenerator = LottoGenerator()
 
-    try {
-        // Purchase
-        val purchaseAmount = inputView.readPurchaseAmount()
-        val lottoCount = purchaseAmount / 1000
-        val lottos = lottoGenerator.generate(lottoCount)
-        outputView.printPurchasedLottos(lottos)
+    // Purchase
+    val purchaseAmount = readPurchaseAmount(inputView)
+    val lottoCount = purchaseAmount / 1000
+    val lottos = lottoGenerator.generate(lottoCount)
+    outputView.printPurchasedLottos(lottos)
 
-        // Winning numbers
-        val winningNumbers = inputView.readWinningNumbers()
-        val bonusNumber = inputView.readBonusNumber(winningNumbers)
+    // Winning numbers
+    val winningNumbers = readWinningNumbers(inputView)
+    val bonusNumber = readBonusNumber(inputView, winningNumbers)
 
-        // Check results
-        val winningChecker = WinningChecker(winningNumbers, bonusNumber)
-        val results = lottos.groupingBy { winningChecker.checkRank(it) }
-            .eachCount()
-            .filter { it.key != LottoRank.NONE }
+    // Check results
+    val winningChecker = WinningChecker(winningNumbers, bonusNumber)
+    val results = lottos.groupingBy { winningChecker.checkRank(it) }
+        .eachCount()
+        .filter { it.key != LottoRank.NONE }
 
-        // Output
-        outputView.printWinningStatistics(results, lottoCount * 1000)
-    } catch (e: IllegalArgumentException) {
-        println(e.message)
+    // Output
+    outputView.printWinningStatistics(results, lottoCount * 1000)
+}
+
+fun readPurchaseAmount(inputView: InputView): Int {
+    while (true) {
+        try {
+            return inputView.readPurchaseAmount()
+        } catch (e: IllegalArgumentException) {
+            println(e.message)
+        }
+    }
+}
+
+fun readWinningNumbers(inputView: InputView): List<Int> {
+    while (true) {
+        try {
+            return inputView.readWinningNumbers()
+        } catch (e: IllegalArgumentException) {
+            println(e.message)
+        }
+    }
+}
+
+fun readBonusNumber(inputView: InputView, winningNumbers: List<Int>): Int {
+    while (true) {
+        try {
+            return inputView.readBonusNumber(winningNumbers)
+        } catch (e: IllegalArgumentException) {
+            println(e.message)
+        }
     }
 }
