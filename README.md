@@ -128,6 +128,7 @@ I followed these principles in my implementation:
 - [x] Completed integration of all components ✅
 - [x] Complete unit tests for all components ✅
 - [x] Fixed edge case with zero tickets return rate ✅
+- [x] Implement re-prompting for invalid inputs (instead of exiting) ✅
 - [ ] Final review and code quality improvements
 
 ## 📋 Applying Feedback from Week 1
